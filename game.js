@@ -1,6 +1,5 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const modeButton = document.getElementById("modeButton");
 
 let dino = {
   x: 50,
@@ -16,7 +15,6 @@ let dino = {
 let obstacles = [];
 let score = 0;
 let gameOver = false;
-let isDarkMode = false;
 
 function drawDino() {
   ctx.fillStyle = dino.color;
@@ -39,7 +37,9 @@ function updateDino() {
 }
 
 function drawObstacles() {
-  ctx.fillStyle = isDarkMode ? "#ff6347" : "red";
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
+    "--text-color"
+  );
   for (let obs of obstacles) {
     ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
   }
@@ -104,7 +104,9 @@ function draw() {
 
     requestAnimationFrame(draw);
   } else {
-    ctx.fillStyle = isDarkMode ? "#fff" : "black";
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
+      "--text-color"
+    );
     ctx.font = "48px serif";
     ctx.fillText("Game Over", canvas.width / 3, canvas.height / 2);
     ctx.font = "24px serif";
@@ -125,30 +127,6 @@ document.addEventListener("keydown", (e) => {
       dino.velocity = dino.lift;
     }
   }
-});
-
-modeButton.addEventListener("click", () => {
-  isDarkMode = !isDarkMode;
-  if (isDarkMode) {
-    document.documentElement.style.setProperty("--bg-color", "#333");
-    document.documentElement.style.setProperty("--text-color", "#fff");
-    document.documentElement.style.setProperty("--button-bg-color", "#555");
-    document.documentElement.style.setProperty(
-      "--button-hover-bg-color",
-      "#444"
-    );
-    modeButton.textContent = "Switch to Light Mode";
-  } else {
-    document.documentElement.style.setProperty("--bg-color", "#f7f7f7");
-    document.documentElement.style.setProperty("--text-color", "#000");
-    document.documentElement.style.setProperty("--button-bg-color", "#ddd");
-    document.documentElement.style.setProperty(
-      "--button-hover-bg-color",
-      "#ccc"
-    );
-    modeButton.textContent = "Switch to Dark Mode";
-  }
-  draw(); // Redraw the game to apply new colors
 });
 
 draw();
